@@ -8,27 +8,36 @@ module Categoria
 
       source_root File.expand_path("templates", __dir__)
 
+      sig { returns(String) }
       def module_name = file_name.capitalize
 
       sig { void }
       def setup_new_domain
-        domain_directory_path = "#{Rails.root}/app/lib/#{file_name}"
-        %w[
-          internal/commands
-          internal/models
-          command
-          data
-        ].each do |component_path|
-          full_component_path = "#{domain_directory_path}/#{component_path}"
+        domain_directory_path = "app/lib/#{file_name}"
 
-          empty_directory full_component_path
-          create_file "#{full_component_path}/.keep"
+        in_root do
+          %w[
+            internal/commands
+            internal/models
+            command
+            data
+          ].each do |component_path|
+            create_empty_directory_with_keep_file \
+              at: "#{domain_directory_path}/#{component_path}"
+          end
+
+          create_file "#{domain_directory_path}/description.yml"
         end
 
-        create_file "#{domain_directory_path}/description.yml"
         template \
           "domain_module.rb.erb",
           "#{domain_directory_path}.rb"
+      end
+
+      sig { params(at: String).void }
+      private def create_empty_directory_with_keep_file(at:)
+        empty_directory at
+        create_file "#{at}/.keep"
       end
     end
   end
