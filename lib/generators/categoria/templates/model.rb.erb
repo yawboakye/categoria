@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
-<% module_namespacing do -%>
-class <%= class_name %> < ApplicationRecord; end
-<% end -%>
+module <%= Rails.application.class.module_parent %>
+  module <%= domain_module %>
+    module Internal
+      module Models
+        class <%= internal_model_class_name %> < ApplicationRecord; end
+      end
+    end
+  end
+end
