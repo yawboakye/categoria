@@ -8,6 +8,7 @@ require "rails/generators/model_helpers"
 require "rails/generators/migration"
 require "active_support/inflector"
 require "active_record"
+require_relative "helpers"
 
 module Categoria
   module Generators
@@ -21,12 +22,15 @@ module Categoria
     #     security-by-obscurity.
     #   - models are not in `app/models` but instead internal to domain.
     class ModelGenerator < ::Rails::Generators::NamedBase
+      extend T::Sig
+
       desc <<~DOC.squish
       DOC
 
       include ::Rails::Generators::ModelHelpers
       include ::Rails::Generators::Migration
       include ::ActiveRecord::Generators::Migration
+      include Helpers
 
       source_root File.expand_path("templates", __dir__)
 
@@ -58,18 +62,7 @@ module Categoria
       end
 
       sig { returns(String) }
-      def domain_module = domain_name.capitalize
-
-      sig { returns(String) }
       def internal_model_class_name = ActiveSupport::Inflector.classify(internal_model_name)
-
-      sig { returns(String) }
-      def domain_name
-        @domain_name ||= T.let(
-          T.must(name.split(/:/)[0]),
-          T.nilable(String)
-        )
-      end
 
       sig { returns(String) }
       def internal_model_name
@@ -80,7 +73,7 @@ module Categoria
       end
 
       sig { returns(String) }
-      def domain_prefixed_relation_name = %(#{domain_name.singularize}_#{internal_model_name.pluralize})
+      def domain_prefixed_relation_name = %(#{domain_prefix}_#{internal_model_name.pluralize})
 
       sig { returns(T::Array[String]) }
       def attributes_with_index = attributes.select { !_1.reference? && _1.has_index? }
