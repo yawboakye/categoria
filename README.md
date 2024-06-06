@@ -22,11 +22,13 @@ point of departure is the following:
 
 domains live under `app/lib` of the rails application. internally, it is
 organized into three main categories, represented by directories and ruby module
-namespaces:
+namespaces. all domains are sub-namespaced under the application's main
+namespace. an initializer is added to override zeitwerk's default behavior of
+using `Object` as the root namespace for classes loaded from `app/lib`.
 
-- `internal`: to be described
-- `command`: to be described
-- `data`: to be described
+#### `internal`
+#### `command`
+#### `data`
 
 [discourse]: https:/github.com/discourse/discourse
 [dc_models]: https://github.com/discourse/discourse/tree/main/app/models
