@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+module <%= Rails.application.class.module_parent %>
+  module <%= domain_module %>
+    module Data
+      class <%= data_class_name %> < ::Categoria::Data
+      end
+    end
+  end
+end
+
