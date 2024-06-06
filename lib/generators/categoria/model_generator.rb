@@ -21,6 +21,9 @@ module Categoria
     #     security-by-obscurity.
     #   - models are not in `app/models` but instead internal to domain.
     class ModelGenerator < ::Rails::Generators::NamedBase
+      desc <<~DOC.squish
+      DOC
+
       include ::Rails::Generators::ModelHelpers
       include ::Rails::Generators::Migration
       include ::ActiveRecord::Generators::Migration
@@ -37,7 +40,7 @@ module Categoria
       def create_migration_file
         migration_template(
           "model_migration.rb.erb",
-          File.join(db_migrate_path, "create_#{relation_name}_table.rb"),
+          File.join(db_migrate_path, "create_#{domain_prefixed_relation_name}_table.rb"),
           migration_version:
         )
       end
@@ -77,7 +80,10 @@ module Categoria
       end
 
       sig { returns(String) }
-      def relation_name = %(#{domain_name}_#{internal_model_name.pluralize})
+      def domain_prefixed_relation_name = %(#{domain_name}_#{internal_model_name.pluralize})
+
+      sig { returns(T::Array[String]) }
+      def attributes_with_index = attributes.select { !_1.reference? && _1.has_index? }
 
       sig { params(dirname: String).returns(String) }
       def self.next_migration_number(dirname)
