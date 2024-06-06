@@ -80,7 +80,7 @@ module Categoria
       end
 
       sig { returns(String) }
-      def domain_prefixed_relation_name = %(#{domain_name}_#{internal_model_name.pluralize})
+      def domain_prefixed_relation_name = %(#{domain_name.singularize}_#{internal_model_name.pluralize})
 
       sig { returns(T::Array[String]) }
       def attributes_with_index = attributes.select { !_1.reference? && _1.has_index? }
