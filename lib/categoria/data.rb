@@ -3,6 +3,7 @@
 
 module Categoria
   class Data
+    extend T::Helpers
     extend T::Sig
 
     abstract!
