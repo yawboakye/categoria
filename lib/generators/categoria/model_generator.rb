@@ -6,7 +6,6 @@ require "rails/generators/active_record"
 require "rails/generators/active_record/migration"
 require "rails/generators/model_helpers"
 require "rails/generators/migration"
-require "active_support/inflector"
 require "active_record"
 require_relative "helpers"
 
@@ -55,25 +54,14 @@ module Categoria
 
       sig { void }
       def generate_internal_model
-        model_component_path = domain_component_path(domain_name, Component::Model)
-        generated_model_path = "#{model_component_path}/#{internal_model_name}.rb"
+        component_path = domain_component_path(domain, Component::Model)
+        class_path = File.join(component_path, "#{component}.rb")
 
-        in_root { template "model.rb.erb", generated_model_path }
+        in_root { template "model.rb.erb", class_path }
       end
 
       sig { returns(String) }
-      def internal_model_class_name = ActiveSupport::Inflector.classify(internal_model_name)
-
-      sig { returns(String) }
-      def internal_model_name
-        @internal_model_name ||= T.let(
-          T.must(name.split(/:/)[1]),
-          T.nilable(String)
-        )
-      end
-
-      sig { returns(String) }
-      def domain_prefixed_relation_name = %(#{domain_prefix}_#{internal_model_name.pluralize})
+      def domain_prefixed_relation_name = %(#{domain_prefix}_#{component.pluralize})
 
       sig { returns(T::Array[String]) }
       def attributes_with_index = attributes.select { !_1.reference? && _1.has_index? }

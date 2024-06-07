@@ -4,7 +4,7 @@ module <%= Rails.application.class.module_parent %>
   module <%= domain_module %>
     module Internal
       module Models
-        class <%= internal_model_class_name %> < ApplicationRecord
+        class <%= class_name %> < ApplicationRecord
           self.table_name = "<%= domain_prefixed_relation_name %>"
         end
       end
