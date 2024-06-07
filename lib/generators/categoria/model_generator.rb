@@ -32,6 +32,7 @@ module Categoria
       desc <<~DOC.squish
       DOC
 
+
       source_root File.expand_path("templates", __dir__)
 
       argument \
@@ -42,9 +43,11 @@ module Categoria
 
       sig { void }
       def create_migration_file
+        migrate_dir = Pathname.new(db_migrate_path)
+
         migration_template(
           "model_migration.rb.erb",
-          File.join(db_migrate_path, "create_#{domain_prefixed_relation_name}_table.rb"),
+          migrate_dir.join("create_#{domain_prefixed_relation_name}_table.rb"),
           migration_version:
         )
       end
@@ -55,7 +58,7 @@ module Categoria
       sig { void }
       def generate_internal_model
         component_path = domain_component_path(domain, Component::Model)
-        class_path = File.join(component_path, "#{component}.rb")
+        class_path = component_path.join("#{component}.rb")
 
         in_root { template "model.rb.erb", class_path }
       end

@@ -15,7 +15,7 @@ module Categoria
       def generate_command_class
         in_root do
           component_path = domain_component_path(domain, Component::Command)
-          class_path = File.join(component_path, "#{component}.rb")
+          class_path     = component_path.join("#{component}.rb")
 
           create_file class_path, <<~COMMAND
             # frozen_string_literal

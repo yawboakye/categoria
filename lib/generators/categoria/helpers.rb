@@ -44,14 +44,14 @@ module Categoria
         )
       end
 
-      sig { params(domain: String, component: Types::Component).returns(String) }
+      sig { params(domain: String, component: Types::Component).returns(Pathname) }
       def domain_component_path(domain, component)
         domain_path = domain_path_in_root(domain)
 
         case component
-        when Component::Command then %(#{domain_path}/command)
-        when Component::Model   then %(#{domain_path}/internal/models)
-        when Component::Data    then %(#{domain_path}/data)
+        when Component::Command then Pathname.new %(#{domain_path}/command)
+        when Component::Model   then Pathname.new %(#{domain_path}/internal/models)
+        when Component::Data    then Pathname.new %(#{domain_path}/data)
         else T.absurd(component)
         end
       end

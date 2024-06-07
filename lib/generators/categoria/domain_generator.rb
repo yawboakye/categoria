@@ -13,7 +13,7 @@ module Categoria
 
       sig { void }
       def setup_new_domain
-        domain_directory_path = "app/lib/#{file_name}"
+        domain_dir = Pathname.new("app/lib/#{file_name}")
 
         in_root do
           %w[
@@ -23,21 +23,21 @@ module Categoria
             data
           ].each do |component_path|
             create_empty_directory_with_keep_file \
-              at: "#{domain_directory_path}/#{component_path}"
+              at: domain_dir.join(component_path)
           end
 
-          create_file "#{domain_directory_path}/description.yml"
+          create_file domain_dir.join("description.yml")
         end
 
         template \
           "domain_module.rb.erb",
-          "#{domain_directory_path}.rb"
+          "#{domain_dir}.rb"
       end
 
-      sig { params(at: String).void }
+      sig { params(at: Pathname).void }
       private def create_empty_directory_with_keep_file(at:)
         empty_directory at
-        create_file "#{at}/.keep"
+        create_file at.join(".keep")
       end
     end
   end
