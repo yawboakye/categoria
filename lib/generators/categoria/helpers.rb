@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "active_support/inflector"
+
 module Categoria
   module Generators
     module Helpers
@@ -9,16 +11,36 @@ module Categoria
       Component = Types::Component
 
       sig { returns(String) }
-      def domain_module = domain_name.capitalize
+      def root_module = Rails.application.class.module_parent.name
 
       sig { returns(String) }
-      def domain_prefix = domain_name.singularize
+      def domain_module = domain.capitalize
 
       sig { returns(String) }
-      def domain_name
-        @domain_name ||= T.let(
-          T.must(name.split(/:/)[0]),
+      def domain_prefix = domain.singularize
+
+      def class_name = ActiveSupport::Inflector.classify(component)
+
+      sig { returns(String) }
+      def domain
+        @domain ||= T.let(
+          T.must(domain_and_component[0]),
           T.nilable(String)
+        )
+      end
+
+      def component
+        @component ||= T.let(
+          T.must(domain_and_component[1]),
+          T.nilable(String)
+        )
+      end
+
+      sig { returns([String, String]) }
+      def domain_and_component
+        @domain_and_component ||= T.let(
+          T.must(name.split(/:/)[..1]),
+          [String, String]
         )
       end
 
