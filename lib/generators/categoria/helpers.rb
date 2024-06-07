@@ -6,6 +6,8 @@ module Categoria
     module Helpers
       extend T::Sig
 
+      Component = Types::Component
+
       sig { returns(String) }
       def domain_module = domain_name.capitalize
 
@@ -19,6 +21,21 @@ module Categoria
           T.nilable(String)
         )
       end
+
+      sig { params(domain: String, component: Types::Component).returns(String) }
+      def domain_component_path(domain, component)
+        domain_path = domain_path_in_root(domain)
+
+        case component
+        when Component::Command then %(#{domain_path}/command)
+        when Component::Model   then %(#{domain_path}/internal/models)
+        when Component::Data    then %(#{domain_path}/data)
+        else T.absurd(component)
+        end
+      end
+
+      sig { params(domain: String).returns(String) }
+      def domain_path_in_root(domain) = %(app/lib/#{domain})
     end
   end
 end

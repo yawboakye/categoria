@@ -23,14 +23,15 @@ module Categoria
     #   - models are not in `app/models` but instead internal to domain.
     class ModelGenerator < ::Rails::Generators::NamedBase
       extend T::Sig
-
-      desc <<~DOC.squish
-      DOC
-
       include ::Rails::Generators::ModelHelpers
       include ::Rails::Generators::Migration
       include ::ActiveRecord::Generators::Migration
       include Helpers
+
+      Component = Types::Component
+
+      desc <<~DOC.squish
+      DOC
 
       source_root File.expand_path("templates", __dir__)
 
@@ -54,11 +55,10 @@ module Categoria
 
       sig { void }
       def generate_internal_model
-        in_root do
-          template \
-            "model.rb.erb",
-            "app/lib/#{domain_name}/internal/models/#{internal_model_name}.rb"
-        end
+        model_component_path = domain_component_path(domain_name, Component::Model)
+        generated_model_path = "#{model_component_path}/#{internal_model_name}.rb"
+
+        in_root { template "model.rb.erb", generated_model_path }
       end
 
       sig { returns(String) }
