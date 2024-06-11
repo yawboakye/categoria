@@ -18,7 +18,7 @@ module Categoria
           class_path     = component_path.join("#{component}.rb")
 
           create_file class_path, <<~COMMAND
-            # frozen_string_literal
+            # frozen_string_literal: true
 
             module #{root_module}
               module #{domain_module}
