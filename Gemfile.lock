@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    categoria (0.1.0.pre.beta0)
+    categoria (0.1.0.pre.beta1)
       rails (~> 7.0)
       sorbet-runtime (~> 0.5)
       zeitwerk (~> 2.6)
