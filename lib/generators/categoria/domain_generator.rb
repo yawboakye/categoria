@@ -16,6 +16,12 @@ module Categoria
         domain_dir = Pathname.new("app/lib/#{file_name}")
 
         in_root do
+          # turns out that in order to cleanly undo the changes
+          # introduced by the generator, we should make a few of
+          # the actions more explicit, and independent, like the
+          # creation of the domain directory itself.
+          empty_directory domain_dir
+
           %w[
             internal/commands
             internal/models
@@ -26,7 +32,16 @@ module Categoria
               at: domain_dir.join(component_path)
           end
 
-          create_file domain_dir.join("description.yml")
+          template \
+            "domain_description.yml.erb",
+            domain_dir.join("description.yml")
+          create_file domain_dir.join("README.md"), <<~README
+            # About #{module_name}
+
+            Describe the domain. You may provide usage guide for your public interfaces (commands).
+            Feel free to describe explicitly what may be implicit (e.g. triggered jobs, emitted
+            events, sent emails, etc).
+          README
         end
 
         template \
